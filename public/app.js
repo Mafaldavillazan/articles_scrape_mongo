@@ -32,9 +32,9 @@ $(document).on("click", "p", function () {
       $("#notes").append("<button data-id='" + data._id + "' id='savecomment'>Save Note</button>");
 
       // If there's a note in the article
-      if (data.Comment) {
-        $("#titleinput").val(data.Comment.title);
-        $("#bodyinput").val(data.Comment.body);
+      if (data.comment) {
+        $("#titleinput").val(data.comment.title);
+        $("#bodyinput").val(data.comment.body);
       }
     });
 });
@@ -55,7 +55,17 @@ $(document).on("click", "#savecomment", function () {
     .then(function (data) {
       console.log(data);
       $("#notes").empty();
+      $.ajax({
+        method: "GET",
+        url: "/comments/" + data.comment
+      }).then(function (data) {
+        console.log(data)
+        $("#commentTittle").append("<h2>" + data.title + "</h2>");
+        $("#comment").append("<h4>" + data.body + "</h4>");
+      })
     });
+
+
 
 
   $("#titleinput").val("");

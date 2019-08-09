@@ -83,21 +83,46 @@ app.get("/articles/:id", function (req, res) {
         });
 });
 
-// +++++++++++++
-// Post the articles to that particular Article ID
-app.post("/articles/:id", function(req, res) {
-    db.Comment.create(req.body)
-      .then(function(CommentDB) {
-        return db.Article.findOneAndUpdate({ _id: req.params.id }, { comment: CommentDB }, { new: true });
-      })
-      .then(function(ArticleDB) {
-        res.json(ArticleDB);
-      })
-      .catch(function(err) {
-        res.json(err);
-      });
-  });
 
+
+// +++++++++++++
+// Save and update that Article ID
+app.post("/articles/:id", function (req, res) {
+    db.Comment.create(req.body)
+        .then(function (CommentDB) {
+            return db.Article.findOneAndUpdate({ _id: req.params.id }, { comment: CommentDB._id }, { new: true });
+        })
+        .then(function (ArticleDB) {
+            res.json(ArticleDB);
+        })
+        .catch(function (err) {
+            res.json(err);
+        });
+});
+
+// +++++++++++++
+// Find the comments
+app.get("/comments", function (req, res) {
+    db.Comment.find({})
+        .then(function (CommentDB) {
+            res.json(CommentDB);
+        })
+        .catch(function (err) {
+            res.json(err);
+        });
+});
+
+// +++++++++++++
+// Find the comments
+app.get("/comments/:id", function (req, res) {
+    db.Comment.findOne({ _id: req.params.id })
+        .then(function (CommentDB) {
+            res.json(CommentDB);
+        })
+        .catch(function (err) {
+            res.json(err);
+        });
+});
 // +++++++++++++
 // Connecting to the DB
 app.listen(PORT, function () {
