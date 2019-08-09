@@ -15,7 +15,7 @@ $.getJSON("/articles", function (data) {
 
 // Creating the note
 $(document).on("click", "#article", function () {
-  $("#comment").empty();
+  $("#comment").empty()
   $("#notes").empty();
   var thisId = $(this).attr("data-id");
 
@@ -35,11 +35,15 @@ $(document).on("click", "#article", function () {
 
       // If there's a note in the article
       if (data.comment) {
-        $newDiv = $("<br><div>")
-        $newDiv.append("Title: " + data.comment.title);
-        $newDiv.append("<br> About: " + data.comment.body)
-  
-        $("#comment").append($newDiv);
+        for (var i = 0; i < data.comment.length; i++) {
+          $newDiv = $("<br><div>")
+          $newDiv.append("Title: " + data.comment[i].title);
+          $newDiv.append("<br> About: " + data.comment[i].body)
+
+          $newButton = $("<button class='delete'>")
+          $("#comment").append($newDiv);
+        }
+
       }
       console.log(data.comment)
     });
@@ -62,8 +66,7 @@ $(document).on("click", "#savecomment", function () {
   })
     .then(function (data) {
       console.log(data);
-      $("#notes").empty();
-      $("#comment").empty();
+      $("#notes").empty()
     })
 
   $("#titleinput").val("");

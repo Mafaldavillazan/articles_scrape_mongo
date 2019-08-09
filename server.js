@@ -58,6 +58,7 @@ app.get("/scrape", function (req, res) {
                 })
         });
     });
+    res.sendStatus(200)
 })
 
 // +++++++++++++
@@ -92,7 +93,7 @@ app.get("/articles/:id", function (req, res) {
 app.post("/articles/:id", function (req, res) {
     db.Comment.create(req.body)
         .then(function (CommentDB) {
-            return db.Article.findOneAndUpdate({ _id: req.params.id }, { comment: CommentDB._id }, { new: true });
+            return db.Article.findOneAndUpdate({ _id: req.params.id }, { $push: {comment: CommentDB._id}}, { new: true });
         })
         .then(function (ArticleDB) {
             res.json(ArticleDB);
