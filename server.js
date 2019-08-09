@@ -55,6 +55,17 @@ app.get("/scrape", function (req, res) {
     });
 })
 
+// +++++++++++++
+//  Finding all the articles in our DB
+app.get("/articles", function(req, res) {
+    db.Article.find({})
+      .then(function(ArticleDB) {
+        res.json(ArticleDB);
+      })
+      .catch(function(err) {
+        res.json(err);
+      });
+  });
 
 // +++++++++++++
 // Connecting to the DB
