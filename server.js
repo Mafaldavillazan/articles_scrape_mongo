@@ -5,7 +5,7 @@ var app = express()
 var db = require("./models");
 var PORT = 3000;
 var mongoose = require("mongoose");
-mongoose.connect("mongodb://localhost/unit18Populater", { useNewUrlParser: true });
+mongoose.connect("mongodb://localhost/news", { useNewUrlParser: true });
 //==============
 
 //==============
