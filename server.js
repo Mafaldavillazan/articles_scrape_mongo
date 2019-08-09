@@ -1,44 +1,63 @@
+//==============
+// DB 
+var express = require("express");
+var app = express()
+var db = require("./models");
+var PORT = 3000;
+var mongoose = require("mongoose");
+mongoose.connect("mongodb://localhost/unit18Populater", { useNewUrlParser: true });
+//==============
 
-
-//++++++++++++++
-//SCRAPPING TOOLS
+//==============
+//Scrapping tools
 var axios = require("axios");
 var cheerio = require("cheerio");
+//==============
 
-axios.get("https://www.npr.org/sections/news/").then(function (response) {
+//==============
+//Setting the app (inputs & folder)
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.static("public"));
+//==============
 
-    // Load the body of the HTML into cheerio
-    var $ = cheerio.load(response.data);
+// +++++++++++++
+// Scrapping the website and adding the data
+// to the Data base
+app.get("/scrape", function (req, res) {
+    axios.get("https://www.npr.org/sections/news/").then(function (response) {
+        var $ = cheerio.load(response.data);
 
-    // Empty array to save our scraped data
-    var results = [];
+        $("div.item-info").each(function (i, element) {
+            var result = {};
+            result.title = $(element)
+                .find("h2.title")
+                .children("a")
+                .text();
+            result.link = $(element)
+                .find("h2.title")
+                .children("a")
+                .attr("href");
+            result.summary = $(element)
+                .find("p.teaser")
+                .children("a")
+                .text();
 
-    // With cheerio, find each h4-tag with the class "headline-link" and loop through the results
-    $("div.item-info").each(function (i, element) {
-
-        title = $(element)
-            .find("h2.title")
-            .children("a")
-            .text();
-        link = $(element)
-            .find("h2.title")
-            .children("a")
-            .attr("href");
-        summary = $(element)
-            .find("p.teaser")
-            .children("a")
-            .text();
-
-        // Make an object with data we scraped for this h4 and push it to the results array
-        results.push({
-            headline: title,
-            summary: summary,
-            URL: link,
+            db.Article.create(result)
+                .then(function (ArticledDB) {
+                    console.log(ArticledDB);
+                })
+                .catch(function (err) {
+                    // If an error occurred, log it
+                    console.log(err);
+                })
         });
     });
-    // After looping through each h4.headline-link, log the results
-    console.log(results);
-});
+})
 
 
-
+// +++++++++++++
+// Connecting to the DB
+app.listen(PORT, function () {
+    console.log("App running on port localhost:" + PORT);
+})
