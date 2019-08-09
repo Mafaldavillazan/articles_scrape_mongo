@@ -84,11 +84,11 @@ app.get("/articles/:id", function (req, res) {
 });
 
 // +++++++++++++
-// Post the articles to that particular ID
+// Post the articles to that particular Article ID
 app.post("/articles/:id", function(req, res) {
     db.Comment.create(req.body)
       .then(function(CommentDB) {
-        return db.Article.findOneAndUpdate({ _id: req.params.id }, { note: CommentDB._id }, { new: true });
+        return db.Article.findOneAndUpdate({ _id: req.params.id }, { comment: CommentDB }, { new: true });
       })
       .then(function(ArticleDB) {
         res.json(ArticleDB);
