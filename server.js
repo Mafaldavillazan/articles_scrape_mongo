@@ -5,7 +5,10 @@ var app = express()
 var db = require("./models");
 var PORT = 3000;
 var mongoose = require("mongoose");
-mongoose.connect("mongodb://localhost/news", { useNewUrlParser: true });
+
+//var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/news";
+//mongoose.connect(MONGODB_URI, { useNewUrlParser: true })
+mongoose.connect("mongodb://localhost/news", { useNewUrlParser: true })
 //==============
 
 //==============
@@ -57,8 +60,36 @@ app.get("/scrape", function (req, res) {
 
 // +++++++++++++
 //  Finding all the articles in our DB
-app.get("/articles", function(req, res) {
+app.get("/articles", function (req, res) {
     db.Article.find({})
+        .then(function (ArticleDB) {
+            res.json(ArticleDB);
+        })
+        .catch(function (err) {
+            res.json(err);
+        });
+});
+
+// +++++++++++++
+// Populate the articles with the comments
+app.get("/articles/:id", function (req, res) {
+    db.Article.findOne({ _id: req.params.id })
+        .populate("Comment")
+        .then(function (ArticleDB) {
+            res.json(ArticleDB);
+        })
+        .catch(function (err) {
+            res.json(err);
+        });
+});
+
+// +++++++++++++
+// Post the articles to that particular ID
+app.post("/articles/:id", function(req, res) {
+    db.Comment.create(req.body)
+      .then(function(CommentDB) {
+        return db.Article.findOneAndUpdate({ _id: req.params.id }, { note: CommentDB._id }, { new: true });
+      })
       .then(function(ArticleDB) {
         res.json(ArticleDB);
       })
