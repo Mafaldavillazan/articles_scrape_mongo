@@ -24,6 +24,8 @@ app.use(express.json());
 app.use(express.static("public"));
 //==============
 
+
+
 // +++++++++++++
 // Scrapping the website and adding the data
 // to the Data base
@@ -74,7 +76,7 @@ app.get("/articles", function (req, res) {
 // Populate the articles with the comments
 app.get("/articles/:id", function (req, res) {
     db.Article.findOne({ _id: req.params.id })
-        .populate("Comment")
+        .populate("comment")
         .then(function (ArticleDB) {
             res.json(ArticleDB);
         })
@@ -100,29 +102,6 @@ app.post("/articles/:id", function (req, res) {
         });
 });
 
-// +++++++++++++
-// Find the comments
-app.get("/comments", function (req, res) {
-    db.Comment.find({})
-        .then(function (CommentDB) {
-            res.json(CommentDB);
-        })
-        .catch(function (err) {
-            res.json(err);
-        });
-});
-
-// +++++++++++++
-// Find the comments
-app.get("/comments/:id", function (req, res) {
-    db.Comment.findOne({ _id: req.params.id })
-        .then(function (CommentDB) {
-            res.json(CommentDB);
-        })
-        .catch(function (err) {
-            res.json(err);
-        });
-});
 // +++++++++++++
 // Connecting to the DB
 app.listen(PORT, function () {

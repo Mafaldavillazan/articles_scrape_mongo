@@ -1,19 +1,21 @@
 // Grab the articles as a json
 $.getJSON("/articles", function (data) {
   for (var i = 0; i < data.length; i++) {
-    $("#articles").append("<p data-id='" + data[i]._id + "'>"
+    // Display the values with handle bars
+    $("#articles").append("<p id='article' data-id='" + data[i]._id + "'>"
       + data[i].title
-      + "<br />"
-      + data[i].summary
-      + "<br />"
+      + "<br/>"
+      + "<a class='btn btn-info' href="
       + data[i].link
+      + "> Link to article </a>"
+      + "<button id='saved' class='btn btn-secondary'> Save article </button>"
       + "</p>");
   }
 });
 
 // Creating the note
-$(document).on("click", "p", function () {
-
+$(document).on("click", "#article", function () {
+  $("#comment").empty();
   $("#notes").empty();
   var thisId = $(this).attr("data-id");
 
@@ -26,16 +28,20 @@ $(document).on("click", "p", function () {
       console.log(data);
 
       //Create the note to display
-      $("#notes").append("<h2>" + data.title + "</h2>");
-      $("#notes").append("<input id='titleinput' name='title' >");
+      $("#notes").append("<h4>" + data.title + "</h4>");
+      $("#notes").append("<textarea id='titleinput' name='title' >");
       $("#notes").append("<textarea id='bodyinput' name='body'></textarea>");
       $("#notes").append("<button data-id='" + data._id + "' id='savecomment'>Save Note</button>");
 
       // If there's a note in the article
       if (data.comment) {
-        $("#titleinput").val(data.comment.title);
-        $("#bodyinput").val(data.comment.body);
+        $newDiv = $("<br><div>")
+        $newDiv.append("Title: " + data.comment.title);
+        $newDiv.append("<br> About: " + data.comment.body)
+  
+        $("#comment").append($newDiv);
       }
+      console.log(data.comment)
     });
 });
 
@@ -43,6 +49,8 @@ $(document).on("click", "p", function () {
 $(document).on("click", "#savecomment", function () {
 
   var thisId = $(this).attr("data-id");
+
+  console.log("++++++ Inside +++++++")
 
   $.ajax({
     method: "POST",
@@ -55,18 +63,8 @@ $(document).on("click", "#savecomment", function () {
     .then(function (data) {
       console.log(data);
       $("#notes").empty();
-      $.ajax({
-        method: "GET",
-        url: "/comments/" + data.comment
-      }).then(function (data) {
-        console.log(data)
-        $("#commentTittle").append("<h2>" + data.title + "</h2>");
-        $("#comment").append("<h4>" + data.body + "</h4>");
-      })
-    });
-
-
-
+      $("#comment").empty();
+    })
 
   $("#titleinput").val("");
   $("#bodyinput").val("");
