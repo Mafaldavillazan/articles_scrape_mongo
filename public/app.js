@@ -19,7 +19,6 @@ $(document).on("click", "#article", function () {
   $("#notes").empty();
   var thisId = $(this).attr("data-id");
 
-
   //Get the article id
   $.ajax({
     method: "GET",
@@ -55,9 +54,7 @@ $(document).on("click", "#article", function () {
       $(document).on("click", "#savecomment", function () {
 
         var thisId = $(this).attr("data-id");
-
-        console.log("++++++ Inside +++++++")
-
+        
         $.ajax({
           method: "POST",
           url: "/articles/" + thisId,
