@@ -25,7 +25,7 @@ $(document).on("click", "#article", function () {
     url: "/articles/" + thisId
   })
     .then(function (data) {
-      console.log(data);
+      
 
       //Create the note to display
       $("#notes").append("<h4>" + data.title + "</h4>");
@@ -36,11 +36,20 @@ $(document).on("click", "#article", function () {
       // If there's a note in the article
       if (data.comment) {
         renderComment(data)
+        console.log(data)
       }
 
       //Be able to delete the article
-      $(document).on("click", "#delete", function () {
-        console.log(data.comment)
+      $(document).on("click", ".delete", function () {
+        var commentID = $(this).attr("id")
+        console.log(commentID)
+        $.ajax({
+          method: "DELETE",
+          url: "/comment/" + thisId + "/"+ commentID
+        }).then(function (deleteData) { })
+        renderComment(data)
+        console.log("After Delete")
+        console.log(data)
       });
     });
 
@@ -53,7 +62,7 @@ $(document).on("click", "#article", function () {
 
     $.ajax({
       method: "POST",
-      url: "/articles/" + thisId,
+      url: "/articles/" + thisId ,
       data: {
         title: $("#titleinput").val(),
         body: $("#bodyinput").val()
@@ -82,7 +91,10 @@ function renderComment(data) {
     $newDiv.append("Title: " + data.comment[i].title);
     $newDiv.append("<br> About: " + data.comment[i].body)
 
-    $newButton = $("<button id='delete'>")
+    $newButton = $("<br> <button class='delete' id='"
+    + data.comment[i]._id 
+    +"'> X </button>")
+
     $newDiv.append($newButton)
 
     $("#comment").append($newDiv);

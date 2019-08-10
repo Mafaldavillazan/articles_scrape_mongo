@@ -108,14 +108,20 @@ app.post("/articles/:id", function (req, res) {
 
 // +++++++++++++
 //Delete comment
-// app.delete("/comment/:id", function (req, res) {
-//     db.Comment.remove({ _id: mongojs.ObjectId(req.params.id) }, function (err, result) {
-//         if (err) {
-//             return res.sendStatus(500);
-//         }
-//         res.json(result);
-//     });
-// })
+app.delete("/comment/:id/:commentID", function (req, res) {
+    
+    console.log("+++++ req ID ++++++")
+    console.log(req.params.id)
+
+    console.log("+++++ req ID Comment ++++++")
+    console.log(req.params.commentID)
+    db.Article.update({ _id: req.params.id }, { $pull: { comment: req.params.commentID } }, function (err, result) {
+        if (err) {
+            return res.sendStatus(500);
+        }
+        res.json(result);
+    });
+})
 
 
 
