@@ -6,9 +6,9 @@ var db = require("./models");
 var PORT = 3000;
 var mongoose = require("mongoose");
 
-//var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/news";
-//mongoose.connect(MONGODB_URI, { useNewUrlParser: true })
-mongoose.connect("mongodb://localhost/news", { useNewUrlParser: true })
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/news";
+mongoose.connect(MONGODB_URI, { useNewUrlParser: true })
+// mongoose.connect("mongodb://localhost/news", { useNewUrlParser: true })
 //==============
 
 //==============

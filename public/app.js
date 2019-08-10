@@ -117,7 +117,6 @@ function displayAll(thisId) {
       // If there's a note in the article
       if (data.comment) {
         renderComment(data)
-        console.log(data)
       }
 
       // Posting the note to that particular article
@@ -135,7 +134,7 @@ function displayAll(thisId) {
           }
         })
           .then(function (data) {
-            console.log(data);
+            alert("COMMENT POSTED")
             $("#notes").empty()
             $("#comment").empty()
           })
