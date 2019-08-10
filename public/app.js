@@ -1,4 +1,7 @@
 // Grab the articles as a json
+var articleId
+var commentId
+
 $.getJSON("/articles", function (data) {
 
   article1 = "#articles"
@@ -9,65 +12,26 @@ $.getJSON("/articles", function (data) {
 
 });
 
-// Creating the note
+
 $(document).on("click", "#article", function () {
-  $("#comment").empty()
-  $("#notes").empty();
-  var thisId = $(this).attr("data-id");
+  
+  articleId = $(this).attr("data-id");
+  displayAll(articleId)
+
+})
 
 
-  //Get the article id
+
+//Be able to delete the article
+$(document).on("click", ".delete", function () {
+  commentID = $(this).attr("id")
+  console.log(commentID)
   $.ajax({
-    method: "GET",
-    url: "/articles/" + thisId
+    method: "DELETE",
+    url: "/comment/" + articleId + "/" + commentID
+  }).then(function (deleteData) {
+    displayAll(articleId)
   })
-    .then(function (data) {
-
-      commentDisplay(data)
-
-      // If there's a note in the article
-      if (data.comment) {
-        renderComment(data)
-        console.log(data)
-      }
-      //Be able to delete the article
-      $(document).on("click", ".delete", function () {
-        var commentID = $(this).attr("id")
-        console.log(commentID)
-        $.ajax({
-          method: "DELETE",
-          url: "/comment/" + thisId + "/" + commentID
-        }).then(function (deleteData) {
-          location.reload()
-        })
-      })
-
-      // Posting the note to that particular article
-      $(document).on("click", "#savecomment", function () {
-
-
-        var thisId = $(this).attr("data-id");
-
-        $.ajax({
-          method: "POST",
-          url: "/articles/" + thisId,
-          data: {
-            title: $("#titleinput").val(),
-            body: $("#bodyinput").val()
-          }
-        })
-          .then(function (data) {
-            console.log(data);
-            $("#notes").empty()
-            $("#comment").empty()
-            c
-          })
-
-        $("#titleinput").val("");
-        $("#bodyinput").val("");
-      });
-
-    });
 })
 
 //+++++++
@@ -131,4 +95,50 @@ function commentDisplay(data) {
 
 
   $("#notes").append("<button class='btn btn-info' data-id='" + data._id + "' id='savecomment'>Save Note</button>");
+}
+
+
+function displayAll(thisId) {
+  $("#comment").empty()
+  $("#notes").empty();
+  // Creating the note
+  //Get the article id
+  $.ajax({
+    method: "GET",
+    url: "/articles/" + thisId
+  })
+    .then(function (data) {
+
+      commentDisplay(data)
+      // If there's a note in the article
+      if (data.comment) {
+        renderComment(data)
+        console.log(data)
+      }
+
+      // Posting the note to that particular article
+      $(document).on("click", "#savecomment", function () {
+
+
+        var thisId = $(this).attr("data-id");
+
+        $.ajax({
+          method: "POST",
+          url: "/articles/" + thisId,
+          data: {
+            title: $("#titleinput").val(),
+            body: $("#bodyinput").val()
+          }
+        })
+          .then(function (data) {
+            console.log(data);
+            $("#notes").empty()
+            $("#comment").empty()
+          })
+
+        $("#titleinput").val("");
+        $("#bodyinput").val("");
+      });
+
+    });
 }
