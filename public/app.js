@@ -35,40 +35,57 @@ $(document).on("click", "#article", function () {
 
       // If there's a note in the article
       if (data.comment) {
-        for (var i = 0; i < data.comment.length; i++) {
-          $newDiv = $("<br><div>")
-          $newDiv.append("Title: " + data.comment[i].title);
-          $newDiv.append("<br> About: " + data.comment[i].body)
-
-          $newButton = $("<button class='delete'>")
-          $("#comment").append($newDiv);
-        }
-
+        renderComment(data)
       }
-      console.log(data.comment)
+
+      //Be able to delete the article
+      $(document).on("click", "#delete", function () {
+        console.log(data.comment)
+      });
     });
-});
 
-// Posting the note to that particular article
-$(document).on("click", "#savecomment", function () {
+  // Posting the note to that particular article
+  $(document).on("click", "#savecomment", function () {
 
-  var thisId = $(this).attr("data-id");
+    var thisId = $(this).attr("data-id");
 
-  console.log("++++++ Inside +++++++")
+    console.log("++++++ Inside +++++++")
 
-  $.ajax({
-    method: "POST",
-    url: "/articles/" + thisId,
-    data: {
-      title: $("#titleinput").val(),
-      body: $("#bodyinput").val()
-    }
-  })
-    .then(function (data) {
-      console.log(data);
-      $("#notes").empty()
+    $.ajax({
+      method: "POST",
+      url: "/articles/" + thisId,
+      data: {
+        title: $("#titleinput").val(),
+        body: $("#bodyinput").val()
+      }
     })
+      .then(function (data) {
+        console.log(data);
+        $("#notes").empty()
+      })
 
-  $("#titleinput").val("");
-  $("#bodyinput").val("");
-});
+    $("#titleinput").val("");
+    $("#bodyinput").val("");
+  });
+
+
+})
+
+
+//+++++++
+// Functions
+
+function renderComment(data) {
+
+  for (var i = 0; i < data.comment.length; i++) {
+    $newDiv = $("<br><div>")
+    $newDiv.append("Title: " + data.comment[i].title);
+    $newDiv.append("<br> About: " + data.comment[i].body)
+
+    $newButton = $("<button id='delete'>")
+    $newDiv.append($newButton)
+
+    $("#comment").append($newDiv);
+  }
+
+}

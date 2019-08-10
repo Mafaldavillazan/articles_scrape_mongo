@@ -93,7 +93,7 @@ app.get("/articles/:id", function (req, res) {
 app.post("/articles/:id", function (req, res) {
     db.Comment.create(req.body)
         .then(function (CommentDB) {
-            return db.Article.findOneAndUpdate({ _id: req.params.id }, { $push: {comment: CommentDB._id}}, { new: true });
+            return db.Article.findOneAndUpdate({ _id: req.params.id }, { $push: { comment: CommentDB._id } }, { new: true });
         })
         .then(function (ArticleDB) {
             res.json(ArticleDB);
@@ -102,6 +102,24 @@ app.post("/articles/:id", function (req, res) {
             res.json(err);
         });
 });
+// +++++++++++++
+// Update articles from saved to unsaved
+
+
+// +++++++++++++
+//Delete comment
+// app.delete("/comment/:id", function (req, res) {
+//     db.Comment.remove({ _id: mongojs.ObjectId(req.params.id) }, function (err, result) {
+//         if (err) {
+//             return res.sendStatus(500);
+//         }
+//         res.json(result);
+//     });
+// })
+
+
+
+
 
 // +++++++++++++
 // Connecting to the DB
