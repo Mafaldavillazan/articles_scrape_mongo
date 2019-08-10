@@ -25,6 +25,13 @@ app.use(express.static("public"));
 //==============
 
 
+//==============
+//Handle bars
+var exphbs = require("express-handlebars");
+
+app.engine("handlebars", exphbs({ defaultLayout: "main" }));
+app.set("view engine", "handlebars");
+//==============
 
 // +++++++++++++
 // Scrapping the website and adding the data
@@ -50,7 +57,7 @@ app.get("/scrape", function (req, res) {
 
             db.Article.create(result)
                 .then(function (ArticledDB) {
-                    console.log(ArticledDB);
+                    //console.log(ArticledDB);
                 })
                 .catch(function (err) {
                     // If an error occurred, log it
@@ -63,10 +70,10 @@ app.get("/scrape", function (req, res) {
 
 // +++++++++++++
 //  Finding all the articles in our DB
-app.get("/articles", function (req, res) {
+app.get("/", function (req, res) {
     db.Article.find({})
         .then(function (ArticleDB) {
-            res.json(ArticleDB);
+            res.render("index", { article: ArticleDB})
         })
         .catch(function (err) {
             res.json(err);
