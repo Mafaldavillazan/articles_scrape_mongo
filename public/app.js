@@ -85,16 +85,20 @@ function getArticles(jqueyCall, num1, num2, data) {
 function commentDisplay(data) {
 
   $("#notes").append("<h5 class='card-title'>" + data.title + "</h5>");
-  $("#notes").append("<p class='form-inline card-text'>What do you want to say?</p>")
+  $("#notes").append("<p class='card-text'>What do you want to say?</p>")
+  
+  var $newRow = $("<div class= row>")
+  $($newRow).append("<div class= col-4></div>")
 
-
-  var $newDiv = $("<div class= col-3>")
+  var $newDiv = $("<div class= col-4>")
   $($newDiv).append("<input type='text' class='form-control center' id='titleinput' placeholder='title:' name='title'>");
   $($newDiv).append("<textarea type='text' class='form-control center'  id='bodyinput'  placeholder='body:' name='body'></textarea>");
-  $("#notes").append($newDiv)
+  
+  $($newRow).append($newDiv)
+  $("#notes").append($newRow)
+  
 
-
-  $("#notes").append("<button class='btn btn-info' data-id='" + data._id + "' id='savecomment'>Save Note</button>");
+  $("#notes").append("</br><button class='btn btn-info' data-id='" + data._id + "' id='savecomment'>Save Note</button>");
 }
 
 
