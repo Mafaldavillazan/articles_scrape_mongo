@@ -19,13 +19,14 @@ $(document).on("click", "#article", function () {
   $("#notes").empty();
   var thisId = $(this).attr("data-id");
 
+
   //Get the article id
   $.ajax({
     method: "GET",
     url: "/articles/" + thisId
   })
     .then(function (data) {
-      
+
 
       //Create the note to display
       $("#notes").append("<h4>" + data.title + "</h4>");
@@ -39,20 +40,27 @@ $(document).on("click", "#article", function () {
         console.log(data)
       }
 
-      //Be able to delete the article
-      $(document).on("click", ".delete", function () {
-        var commentID = $(this).attr("id")
-        console.log(commentID)
-        $.ajax({
-          method: "DELETE",
-          url: "/comment/" + thisId + "/"+ commentID
-        }).then(function (deleteData) { })
-        renderComment(data)
-        console.log("After Delete")
-        console.log(data)
-      });
     });
 
+  //Be able to delete the article
+  $(document).on("click", ".delete", function () {
+    var commentID = $(this).attr("id")
+    console.log(commentID)
+    $.ajax({
+      method: "DELETE",
+      url: "/comment/" + thisId + "/" + commentID
+    }).then(function (deleteData) {
+      $.ajax({
+        method: "GET",
+        url: "/articles/" + thisId
+      })
+        .then(function (data) {
+          location.reload()
+        });
+
+    })
+
+  })
   // Posting the note to that particular article
   $(document).on("click", "#savecomment", function () {
 
@@ -62,7 +70,7 @@ $(document).on("click", "#article", function () {
 
     $.ajax({
       method: "POST",
-      url: "/articles/" + thisId ,
+      url: "/articles/" + thisId,
       data: {
         title: $("#titleinput").val(),
         body: $("#bodyinput").val()
@@ -78,8 +86,8 @@ $(document).on("click", "#article", function () {
   });
 
 
-})
 
+})
 
 //+++++++
 // Functions
@@ -92,8 +100,8 @@ function renderComment(data) {
     $newDiv.append("<br> About: " + data.comment[i].body)
 
     $newButton = $("<br> <button class='delete' id='"
-    + data.comment[i]._id 
-    +"'> X </button>")
+      + data.comment[i]._id
+      + "'> X </button>")
 
     $newDiv.append($newButton)
 
