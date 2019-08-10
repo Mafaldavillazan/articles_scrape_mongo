@@ -39,54 +39,44 @@ $(document).on("click", "#article", function () {
         renderComment(data)
         console.log(data)
       }
+      //Be able to delete the article
+      $(document).on("click", ".delete", function () {
+        var commentID = $(this).attr("id")
+        console.log(commentID)
+        $.ajax({
+          method: "DELETE",
+          url: "/comment/" + thisId + "/" + commentID
+        }).then(function (deleteData) {
+          location.reload()
+        })
+      })
+
+      // Posting the note to that particular article
+      $(document).on("click", "#savecomment", function () {
+
+        var thisId = $(this).attr("data-id");
+
+        console.log("++++++ Inside +++++++")
+
+        $.ajax({
+          method: "POST",
+          url: "/articles/" + thisId,
+          data: {
+            title: $("#titleinput").val(),
+            body: $("#bodyinput").val()
+          }
+        })
+          .then(function (data) {
+            console.log(data);
+            $("#notes").empty()
+            $("#comment").empty()
+          })
+
+        $("#titleinput").val("");
+        $("#bodyinput").val("");
+      });
 
     });
-
-  //Be able to delete the article
-  $(document).on("click", ".delete", function () {
-    var commentID = $(this).attr("id")
-    console.log(commentID)
-    $.ajax({
-      method: "DELETE",
-      url: "/comment/" + thisId + "/" + commentID
-    }).then(function (deleteData) {
-      $.ajax({
-        method: "GET",
-        url: "/articles/" + thisId
-      })
-        .then(function (data) {
-          location.reload()
-        });
-
-    })
-
-  })
-  // Posting the note to that particular article
-  $(document).on("click", "#savecomment", function () {
-
-    var thisId = $(this).attr("data-id");
-
-    console.log("++++++ Inside +++++++")
-
-    $.ajax({
-      method: "POST",
-      url: "/articles/" + thisId,
-      data: {
-        title: $("#titleinput").val(),
-        body: $("#bodyinput").val()
-      }
-    })
-      .then(function (data) {
-        console.log(data);
-        $("#notes").empty()
-      })
-
-    $("#titleinput").val("");
-    $("#bodyinput").val("");
-  });
-
-
-
 })
 
 //+++++++
