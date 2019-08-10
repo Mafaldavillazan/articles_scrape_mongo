@@ -24,7 +24,6 @@ app.use(express.json());
 app.use(express.static("public"));
 //==============
 
-
 // +++++++++++++
 // Scrapping the website and adding the data
 // to the Data base
@@ -49,7 +48,7 @@ app.get("/scrape", function (req, res) {
 
             db.Article.create(result)
                 .then(function (ArticledDB) {
-                    console.log(ArticledDB);
+                    //console.log(ArticledDB);
                 })
                 .catch(function (err) {
                     // If an error occurred, log it
@@ -65,7 +64,7 @@ app.get("/scrape", function (req, res) {
 app.get("/articles", function (req, res) {
     db.Article.find({})
         .then(function (ArticleDB) {
-            res.render(ArticleDB)
+            res.json(ArticleDB)
         })
         .catch(function (err) {
             res.json(err);

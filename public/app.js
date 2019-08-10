@@ -1,15 +1,37 @@
 // Grab the articles as a json
 $.getJSON("/articles", function (data) {
-  for (var i = 0; i < data.length; i++) {
+  for (var i = 0; i < 5; i++) {
     // Display the values with handle bars
-    $("#articles").append("<p id='article' data-id='" + data[i]._id + "'>"
+    $("#articles").append("<div class='card' style='width: 35rem;' id='article' data-id='" + data[i]._id + "'>"
+      + " <div class='card-body'>"
+      + "<h5 class='card-title'>"
       + data[i].title
-      + "<br/>"
+      + "<h5/>"
+      + "<p class='card-text'>"
+      + data[i].summary
+      + "</p>"
       + "<a class='btn btn-info' href="
       + data[i].link
       + "> Link to article </a>"
-      + "<button id='saved' class='btn btn-secondary'> Save article </button>"
-      + "</p>");
+      + "</div>"
+      + "</div>");
+  }
+
+  for (var i = 5; i < 10; i++) {
+    // Display the values with handle bars
+    $("#articles2").append("<div class='card' style='width: 35rem;' id='article' data-id='" + data[i]._id + "'>"
+      + " <div class='card-body'>"
+      + "<h5 class='card-title'>"
+      + data[i].title
+      + "<h5/>"
+      + "<p class='card-text'>"
+      + data[i].summary
+      + "</p>"
+      + "<a class='btn btn-info' href="
+      + data[i].link
+      + "> Link to article </a>"
+      + "</div>"
+      + "</div>");
   }
 });
 
@@ -54,7 +76,7 @@ $(document).on("click", "#article", function () {
       $(document).on("click", "#savecomment", function () {
 
         var thisId = $(this).attr("data-id");
-        
+
         $.ajax({
           method: "POST",
           url: "/articles/" + thisId,
